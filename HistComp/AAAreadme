@@ -1,0 +1,130 @@
+# Instructions for building and using histogram comparison tools in the 
+# Minerva software environment
+#
+# Scripts in this package:
+#   run_comparison	Creates comparison plots for two input histogram files
+#   merge_hist_files    Merges multiple histogram file into a single
+#                       output file, adding all common histograms
+#
+# run_comparison
+# --------------
+# This script will scan two root files for histograms of the same name. 
+# All directories within the file will be searched. To be considered a 
+# match, a pair of histograms must have the same path within their 
+# respective histogram files.
+#
+# At present, a K-S test is performed between matching histogram
+# pairs. (A ratio chi-squared test will be added soon.) The output
+# is presented as a web page with the histograms ordered by increasing
+# K-S probability, so that the most discrepant plots are listed first.
+# Optionally, a TBrowser is opened after the comparisons are completed.
+# (Runs more slowly if the TBrowser is open.)
+#
+# The comparison output objects generated will be stored under
+# directories with the following naming convention:
+#
+#    //root/Minerva_<test>_results/
+#
+# For the K-S test, "<test>" = "KSprob". The directory structure of the
+# input files will be reflected under the above directories. The comparison
+# plots can be drawn within the TBrowser by clicking on the comparison 
+# object icon with the name of the histograms compared. NOTE that there
+# will be comparison objects within these directories that represent 
+# histograms that were not compared for some reason (no matching histogram
+# in the second file, or a failed K-S test). These objects will have the
+# name "no_name". (Vote for changes to this behavior.)
+#
+# Building the code:
+# 1) Check out AnalysisFramework/Tools/ValidationTools package
+#    The current tag is "valtools_v1_1".
+# 2) In Tools/ValidationTools/HistComp, type:
+
+cd AnalysisFramework/Tools/ValidationTools/HistComp
+make
+
+
+# Running the comparator:
+#  From the AnalysisFramework/Tools/ValidationTools/HistComp directory
+#  (although it can be invoked from any location):
+
+./run_comparison [-d] [-b] <hist_file_1> <hist_file_2> [<output_web_page>] \
+                 [--tmpdir <dir>]
+
+# where:
+#   <hist_file_1>, <hist_file_2> are the input histogram files to be compared, 
+#
+#   <output_web_page> is the file name for the output
+#
+#   -d : enable screen display of the histogram comparisons. In this mode,
+#        the script will open a TBrowser in a root session after
+#        completing the comparisons. Note that this mode will execute
+#        significantly more slowly since all comparison histograms
+#        will be drawn to the screen.
+#   -b : batch mode. Exit from root upon completion. Do not open a TBrowser
+#  --tmpdir <dir> : a user-writable work area needed by the script. Default is
+#        the current directory.
+#
+# Plots linked from the web page will be stored in a sub-directory 
+# with the name:  <output_web_page>_files
+#
+#
+# merge_hist_files
+# ----------------
+# This script merges the contents of multiple input histogram files
+# into a single output file. All directories with the files will be
+# searched. Histograms in the input with the same internal directory 
+# path and histogram name will be summed in an output histogram.
+# The output histograms will reside in a directory with the same
+# path as in the original file, unless the '--mergedir' option is
+# specified, in which the directory structure in the input files is
+# replicated within a top-level directory named "Merge_result".
+# (The --nomergedir option results in the default behavior, and is 
+# provided for backwards compatibility.)
+#
+# When merging many files, it may be necessary to skip some histograms 
+# in the input files in order to prevent the merge process from consuming
+# too much memory. The '--exclude <string>' option will cause the merge
+# process to ignore any object in the input files with a name that contains
+# a sub-string matching '<string>'. If the object is a directory, then
+# all contained histograms and sub-directories will be skipped. An arbitrary
+# number of exclude strings can be specified.
+#
+# Building the code:  same instructions as above
+#
+# Running the merge script:
+#
+#  (NOTE:  a rootlogon.C file in this directory loads all the
+#  required libraries. If invoking this command from
+#  elsewhere, use the -l option or copy the contents of this
+#  rootlogon.C to the relevant rootlogon file.)
+
+./merge_hist_files [-d] [--debug] file1 [file2 [...]] -o target_file \
+                   [-l] [--tmpdir dir] [-r] [--nomergedir] [--mergedir] \
+		   [--exclude <str1> [--exclude <str2> [...]]]
+
+# where
+#   -d             : enable screen display. The root session will remain open
+#                    and a TBrowser object created after the merge is completed.
+#                    The results can be found in the target_file:/Merge_result
+#                    directory
+#
+#   --debug        :  enable debugging output (extremely verbose...)
+#
+#   file1...fileN  : input files to be merged
+#
+#   -o target_file : output file name. This argument pair can
+#                    occcur anywhere on the command line.
+#   -l             : loads merging library from release (as specified by 
+#                    $VALIDATIONTOOLSROOT)
+#   -tmpdir dir    : directory for temporary files created by the script. Must
+#                    be writable by the user
+#   -r             : remove temporary files when done
+#   --nomergedir   : do not create a top-level "merged" directory for contents 
+#                    of merged histograms (ie, the exact directory structure of 
+#                    the input files will be replicated in the merged output 
+#                    file). This is the default behavior. The option is 
+#                    provided only for backwards compatibility.
+#   --mergedir     : replicate the input directory structure below a top-level
+#                    directory named "Merge_result"
+
+# Please email rs@fnal.gov with any questions or comments.
