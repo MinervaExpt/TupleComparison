@@ -9,11 +9,11 @@ set
   $HIST1=<firstfilepath>
   $HIST2=<secondffilepath> 
 ```  
-go $TUPLECOMPARISONROOT/HistComp
+cd $TUPLECOMPARISONROOT/HistComp
   
 type
   
-  python runcompare.py $HIST1 $HIST2 output.html
+  `python runcompare.py $HIST1 $HIST2 output.html`
   
 you should get a lot of output and output.html will contain your comparison
   
