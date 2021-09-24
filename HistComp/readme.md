@@ -2,9 +2,9 @@ To run the comparitor
 
 make certain you have root set up 
 
- export  $TUPLECOMPARISONROOT=<where TupleComparison is > 
-  
-set 
+ export  $TUPLECOMPARISONROOT=where you've cloned TupleComparison
+ 
+set  
   
   $HIST1=<firstfilepath>
   $HIST2=<secondffilepath> 
