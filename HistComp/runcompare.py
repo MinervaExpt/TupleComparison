@@ -3,7 +3,7 @@ from ROOT import *
 #from MnvConverter import convert
 import sys,os
 
-path = os.getenv("VALIDATIONTOOLSROOT")
+path = os.getenv("TUPLECOMPARISONROOT")
 path_bytes = path.encode('ascii')
 
 print (type(path_bytes),type(path))
