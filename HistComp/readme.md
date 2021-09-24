@@ -2,7 +2,9 @@ To run the comparitor
 
 make certain you have root set up 
 
- export  $TUPLECOMPARISONROOT=where you've cloned TupleComparison
+
+
+ `export  $TUPLECOMPARISONROOT=where you've cloned TupleComparison`
  
 set  
 ``` 
@@ -10,6 +12,10 @@ set
   $HIST2=<secondffilepath> 
 ```  
 cd $TUPLECOMPARISONROOT/HistComp
+
+type 
+
+`make` to build the code
   
 type
   
