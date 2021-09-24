@@ -5,7 +5,7 @@
 
 go to directory TupleComparison that you downloaded this package into
 
-`export $TUPLECOMPARISONROOT=$PWD`
+`export TUPLECOMPARISONROOT=$PWD`
 
 `cd $TUPLECOMPARISONROOT/TupleSummarizer`
 
