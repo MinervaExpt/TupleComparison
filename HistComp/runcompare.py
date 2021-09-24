@@ -10,6 +10,7 @@ print (type(path_bytes),type(path))
 if not os.path.exists(path):
   print (" no validationtoolsroot set")
   sys.exit(1)
+gROOT.SetBatch(1)
 gInterpreter.AddIncludePath(path)
 rootsys = os.getenv("ROOTSYS")
 gSystem.Load(rootsys+"/lib/libHist.so");
