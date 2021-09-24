@@ -5,10 +5,10 @@ make certain you have root set up
  export  $TUPLECOMPARISONROOT=where you've cloned TupleComparison
  
 set  
-  
+'''  
   $HIST1=<firstfilepath>
   $HIST2=<secondffilepath> 
-  
+'''  
 go $TUPLECOMPARISONROOT/HistComp
   
 type
