@@ -3,11 +3,13 @@
 
 source $HOME/conda.sh
 
-# add in bunch of exports for MINERvA code. 
 
-cd tuple_study
 
-python nu_cuts_v4.py data.txt 
+export $TUPLECOMPARISONROOT= directory TupleComparison is in 
+
+`cd $TUPLECOMPARISONROOT/TupleSummarizer`
+
+`python nu_cuts_v4.py data.txt `
 
 # data.txt is a list of data files
 
@@ -21,7 +23,6 @@ python nu_cuts_v4.py data.txt
 
 Next if you want to look at a differnet sample: 
 
-
 python nu_cuts_v4.py mc.txt ranges_dat.txt_physical_CCQENu.txt
 
 #this analyzes the list of files mc.txt using the ranges you set earlier. 
@@ -32,9 +33,7 @@ python nu_cuts_v4.py mc.txt ranges_dat.txt_physical_CCQENu.txt
 
 # now to do the comparison
 
-export VALIDATIONTOOLSROOT=~schellmh/local/Tools/ValidationTools
-
-python $VALIDATIONTOOLSROOT/HistComp/runpy3.py hist_data.txt_physical_CCQENu.root hist_short.txt_physical_ranges_data_physical_CCQENu_CCQENu.root diff.html
+python $TUPLECOMPARISONROOT/HistComp/runpy3.py hist_data.txt_physical_CCQENu.root hist_short.txt_physical_ranges_data_physical_CCQENu_CCQENu.root diff.html
 
 # diff.html then has all the plots ordered by how bad the comparison is. 
 
