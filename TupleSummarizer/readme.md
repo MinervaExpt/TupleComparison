@@ -4,8 +4,9 @@
 source $HOME/conda.sh
 
 
+go to directory TupleComparison that you downloaded this package into
 
-export $TUPLECOMPARISONROOT= directory TupleComparison is in 
+export $TUPLECOMPARISONROOT=$PWD`
 
 `cd $TUPLECOMPARISONROOT/TupleSummarizer`
 
