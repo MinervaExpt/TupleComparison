@@ -33,7 +33,15 @@ python nu_cuts_v4.py mc.txt ranges_dat.txt_physical_CCQENu.txt
 
 # now to do the comparison
 
-python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist_data.txt_physical_CCQENu.root hist_short.txt_physical_ranges_data_physical_CCQENu_CCQENu.root diff.html
+`python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist_data.txt_physical_CCQENu.root hist_short.txt_physical_ranges_data_physical_CCQENu_CCQENu.root diff.html`
+
+You can make this shorter by doing
+
+```
+export HIST1=$PWD/hist_data.txt_physical_CCQENu.root
+export HIST2=$PWD/hist_short.txt_physical_ranges_data_physical_CCQENu_CCQENu.root
+```
+`python $TUPLECOMPARISONROOT/HistComp/runcompare.py $HIST1 $HIST diff.html
 
 # diff.html then has all the plots ordered by how bad the comparison is. 
 
