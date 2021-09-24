@@ -1,8 +1,7 @@
 #How to run the comparator. 
 #set up root.  I use  
 
-source $HOME/conda.sh
-
+`source $HOME/conda.sh`
 
 go to directory TupleComparison that you downloaded this package into
 
