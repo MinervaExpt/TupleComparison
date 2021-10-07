@@ -1,0 +1,17 @@
+{
+  "variables":[
+      "CCQENu_leptonE", 
+      "CCQENu_minos_trk_p", 
+      "CCQENu_minos_trk_qp", 
+      "CCQENu_nuHelicity", 
+      "dis_id_energy"
+    ],
+  "cuts":{
+      "physical":"CCQENu_E<120000",
+      "nu":"CCQENu_nuHelicity==1"
+    },
+  "cutchoice":[
+      "physical",
+      "nu"
+    ]
+}
