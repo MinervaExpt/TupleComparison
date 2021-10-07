@@ -66,7 +66,7 @@ The current naming conventions are admittedly messy. They will hopefully be impr
 
 ## The comparison
 
-First, ensure that the code in `$TUPLECOMPARISONROOT/HistComp` is compiled. If it is not, enter this with `cd $TUPLECOMPARISONROOT/HistComp` and type `make` to build it. Then return to `$TUPLECOMPARISONROOT/TupleSummarizer` and run the script in the manner shown below.
+First, ensure that the code in `$TUPLECOMPARISONROOT/HistComp` is compiled. If it is not, enter the directory (`cd $TUPLECOMPARISONROOT/HistComp`) and type `make` to build it. Then return to `$TUPLECOMPARISONROOT/TupleSummarizer` and run the script in the manner shown below.
 
 `python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist__dataExample__[config filename]__CCQENu.root hist__mcExample__[config filename]___[range filename]___CCQENu.root diff.html
 `
