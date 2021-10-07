@@ -4,7 +4,7 @@
 
 In terminal setup ROOT using the appropriate setup script. If on your local machine and you use conda, `source $HOME/conda.sh` might be how if not done automatically.
 
-Go to directory `/TupleComparison/` that you downloaded this package into. Enter the following lines:
+Go to directory `/TupleComparison/`, where this package is cloned to. Enter the following lines:
 
 ```
 export TUPLECOMPARISONROOT=$PWD
@@ -24,7 +24,7 @@ Depending on which version of Python ROOT was built with you may have to replace
 `[JSON config file]` contains information on 
 * which variables to make histograms of
 * the list of cut names to be implemented
-* the values on which to cut on
+* the values to cut on
 
 Under the current default setup in place of `[JSON config file]` use
 * for antineutrino runs: `antinu_config.json`.
@@ -68,9 +68,8 @@ The current naming conventions are admittedly messy. They will hopefully be impr
 
 First, ensure that the code in `$TUPLECOMPARISONROOT/HistComp` is compiled. If it is not, enter this with `cd $TUPLECOMPARISONROOT/HistComp` and type `make` to build it. Then return to `$TUPLECOMPARISONROOT/TupleSummarizer` and run the script in the manner shown below.
 
-```
-python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist__dataExample__[config filename]__CCQENu.root hist__mcExample__[config filename]___[range filename]___CCQENu.root diff.html
-```
+`python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist__dataExample__[config filename]__CCQENu.root hist__mcExample__[config filename]___[range filename]___CCQENu.root diff.html
+`
 
 You can make this shorter by doing
 
