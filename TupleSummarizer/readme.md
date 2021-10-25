@@ -25,7 +25,7 @@ Depending on which version of Python ROOT was built with you may have to replace
 * which variables to make histograms of
 * the list of cut names to be implemented
 * the values to cut on
-* 
+
 `antinu_config.json`, as its name suggests, performs cuts relevant for analyzing antineutrinos. To analyze neutrinos use `nu_config.json`.
 
 `dataExample.txt` is a list of data files. Either edit `dataExample.txt` as necessary to point to the correct files or replace it with the path to an appropriate playlist file.
