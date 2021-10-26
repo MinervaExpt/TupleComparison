@@ -13,7 +13,7 @@ go to directory TupleComparison that you downloaded this package into
 
 # dataExample.txt is a list of data files
 
-#that will generate an output root file with histograms for each variable in the tuple hist_dataExample.txt_physical_CCQENu.root and a text file ranges_dataExample.txt_physical_CCQENu.txt
+#that will generate an output root file with histograms for each variable in the tuple hist_dataExample_physical_CCQENu.root and a text file ranges_dataExample_physical_CCQENu.txt
 
 # physical refers to a set of cuts applied
 
@@ -23,23 +23,23 @@ go to directory TupleComparison that you downloaded this package into
 
 Next if you want to look at a differnet sample: 
 
-python nu_cuts_v4.py mcExample.txt ranges_dat.txt_physical_CCQENu.txt
+python nu_cuts_v4.py mcExample.txt ranges_dat_physical_CCQENu.txt
 
 #this analyzes the list of files mcExample.txt using the ranges you set earlier. 
 
-#this will make a file hist_mcExample.txt_physical_ranges_data_physical_CCQENu_CCQENu.root
+#this will make a file hist_mcExample_physical_ranges_data_physical_CCQENu_CCQENu.root
 
 # note that the filename now includes the ranges filename so you know what you did.
 
 # now to do the comparison
 
-`python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist_dataExample.txt_physical_CCQENu.root hist_mcExample.txt_physical_ranges_data_physical_CCQENu_CCQENu.root diff.html`
+`python $TUPLECOMPARISONROOT/HistComp/runcompare.py hist_dataExample_physical_CCQENu.root hist_mcExample_physical_ranges_data_physical_CCQENu_CCQENu.root diff.html`
 
 You can make this shorter by doing
 
 ```
-export HIST1=$PWD/hist_dataExample.txt_physical_CCQENu.root
-export HIST2=$PWD/hist_mcExample.txt_physical_ranges_data_physical_CCQENu_CCQENu.root
+export HIST1=$PWD/hist_dataExample_physical_CCQENu.root
+export HIST2=$PWD/hist_mcExample_physical_ranges_data_physical_CCQENu_CCQENu.root
 ```
 `python $TUPLECOMPARISONROOT/HistComp/runcompare.py $HIST1 $HIST diff.html
 
