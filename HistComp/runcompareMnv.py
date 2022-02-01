@@ -4,8 +4,8 @@ from MnvConverter import convert
 import sys,os
 
 path = os.getenv("TUPLECOMPARISONROOT")
-path_bytes = path.encode('ascii')
-
+#path_bytes = path.encode('ascii')
+path_bytes = path
 print (type(path_bytes),type(path))
 if not os.path.exists(path):
   print (" no validationtoolsroot set")
