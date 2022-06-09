@@ -3,15 +3,16 @@ from ROOT import *
 from MnvConverter import convert
 import sys,os
 
-path = os.getenv("TUPLECOMPARISONROOT")
-path_bytes = path.encode('ascii')
-
-print (type(path_bytes),type(path))
-if not os.path.exists(path):
+mypath = os.getenv("TUPLECOMPARISONROOT")
+#path_bytes = path.encode('ascii')
+path_bytes = mypath
+print (type(path_bytes),type(mypath))
+print (mypath)
+if not os.path.exists(mypath):
   print (" no validationtoolsroot set")
   sys.exit(1)
 gROOT.SetBatch(1)
-gInterpreter.AddIncludePath(path)
+gInterpreter.AddIncludePath(mypath)
 rootsys = os.getenv("ROOTSYS")
 gSystem.Load(rootsys+"/lib/libHist.so");
 gSystem.Load(rootsys+"/lib/libRIO.so");
@@ -22,7 +23,7 @@ gSystem.Load(rootsys+"/lib/libGui.so");
 #print (newpath, type(newpath))
 #gROOT.SetMacroPath( newpath)
     
-libpath = os.path.join(path,"HistComp","libhistcomp.so")
+libpath = os.path.join(mypath,"HistComp","libhistcomp.so")
 print(libpath)
 gSystem.Load(libpath);
 #gROOT.LoadMacro(libpath);
