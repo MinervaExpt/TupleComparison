@@ -3,12 +3,20 @@ from ROOT import *
 from MnvConverter import convert
 import sys,os
 
+<<<<<<< HEAD
 mypath = os.getenv("TUPLECOMPARISONROOT")
 #path_bytes = path.encode('ascii')
 path_bytes = mypath
 print (type(path_bytes),type(mypath))
 print (mypath)
 if not os.path.exists(mypath):
+=======
+path = os.getenv("TUPLECOMPARISONROOT")
+#path_bytes = path.encode('ascii')
+path_bytes = path
+print (type(path_bytes),type(path))
+if not os.path.exists(path):
+>>>>>>> 837f6fd2121e8099c70c7d2c0e970ce7d05a5653
   print (" no validationtoolsroot set")
   sys.exit(1)
 gROOT.SetBatch(1)
