@@ -2,21 +2,13 @@ from ROOT import *
 
 from MnvConverter import convert
 import sys,os
-
-<<<<<<< HEAD
 mypath = os.getenv("TUPLECOMPARISONROOT")
 #path_bytes = path.encode('ascii')
 path_bytes = mypath
 print (type(path_bytes),type(mypath))
 print (mypath)
 if not os.path.exists(mypath):
-=======
-path = os.getenv("TUPLECOMPARISONROOT")
-#path_bytes = path.encode('ascii')
-path_bytes = path
-print (type(path_bytes),type(path))
-if not os.path.exists(path):
->>>>>>> 837f6fd2121e8099c70c7d2c0e970ce7d05a5653
+
   print (" no validationtoolsroot set")
   sys.exit(1)
 gROOT.SetBatch(1)
@@ -38,7 +30,7 @@ gSystem.Load(libpath);
 #gROOT.LoadMacro(os.path.join(plotutilsdir,"HistComp","libhistcomp.so"));
 thf = TCompareHistFiles()
 thf.enableTest( TCompareHistFiles.KS );
-thf.setScalingType(TCompareHistFiles.EqualArea); # need to make this a variable
+#thf.setScalingType(TCompareHistFiles.ScalingType.FixedFactor); # need to make this a variable
 name1 = sys.argv[1]
 name2 = sys.argv[2]
 print (name1)
