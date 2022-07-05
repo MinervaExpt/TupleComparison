@@ -1,6 +1,6 @@
 from ROOT import *
 
-#from MnvConverter import convert
+from MnvConverter import convert
 import sys,os
 
 path = os.getenv("TUPLECOMPARISONROOT")
