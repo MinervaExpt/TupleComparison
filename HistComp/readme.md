@@ -19,7 +19,7 @@ type
   
 type
   
-  `python runcompare.py $HIST1 $HIST2 output.html`
+  `python runcompareMnv.py $HIST1 $HIST2 output.html`
   
 you should get a lot of output and output.html will contain your comparison
   
