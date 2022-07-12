@@ -1,0 +1,9 @@
+{
+  "playlist":["minervame1N"],
+  "recoNames":["MasterAnaDev","CCQENu"],
+  "mcIn":{"MasterAnaDev":"/home/sean/Minerva/data/playlists/local_smg/minervame1N_MAD_MC.txt",
+  		  "CCQENu":"/home/sean/Minerva/data/playlists/local_smg/minervame1N_CCQENu_MC.txt"},
+  "dataIn":{"MasterAnaDev":"/home/sean/Minerva/data/playlists/local_smg/minervame1N_MAD_Data.txt",
+  			"CCQENu":"/home/sean/Minerva/data/playlists/local_smg/minervame1N_CCQENu_Data.txt"},
+  "cutchoice":["physical","nu"]
+}
