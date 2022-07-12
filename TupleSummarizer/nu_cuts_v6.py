@@ -49,10 +49,16 @@ cuts = {"physical":"RecoName_E<120000",
 config = json.load(open(sys.argv[1]))
 
 playlist = config["playlist"]
+abspath = config["absolutepath"]
 recoNames = config["recoNames"]
 mcIn = config["mcIn"]
 dataIn = config["dataIn"]
 cutchoice = config["cutchoice"]
+
+if not abspath:
+	for name in recoNames:
+		mcIn[name] = os.path.join(os.getcwd(),mcIn[name])
+		dataIn[name] = os.path.join(os.getcwd(),dataIn[name])
 
 #inputlist = open(sys.argv[1],'r').readlines()
 
