@@ -88,6 +88,7 @@ listing = open(rangesname+".txt",'w')
 minimum = {}
 maximum = {}
 compareConfig = {"recoNames":recoNames}
+outputRootFiles = {}
 
 count = {}
 histdict = {"Data":{"Shared":[]}}
@@ -96,6 +97,7 @@ for name in recoNames:
 	count[name] = {"Data":0}
 	histdict["Data"][name+"_only"] = []
 	print("   ",name)
+	
 
 for name in recoNames:
 
@@ -163,10 +165,12 @@ for name in recoNames:
 		ntuple = thecut
 	if keepCuts:
 		print("    Cut Data filename:", cutoutname)
+		outputRootFiles[name+"_cut"] = cutoutname+".root"
 
 	# make the output histogram
 	histoutname = "hist_"+outname
 	compareConfig[name] = os.getcwd()+"/"+histoutname+".root"
+	outputRootFiles[name+"_hists"] = histoutname+".root"
 	houtData = ROOT.TFile(histoutname+".root","RECREATE")
 	ROOT.gROOT.SetBatch(True)  # Supresses the drawing canvas
 	print("    Data histogram filename:", histoutname,"\n")
@@ -334,6 +338,16 @@ with open(jname, "w") as outfile:
 
 ###
 
+json_object = json.dumps(outputRootFiles, indent = 4)
+jname = playlist[0]
+for name in recoNames:
+	jname = jname + "_" + name
+jname = jname + "_outputRootFiles.json"
+with open(jname, "w") as outfile:
+	outfile.write(json_object)
+
+###
+
 compareFile = os.path.dirname(os.path.dirname(os.getcwd()))
 compareConfig["TupleComparisonRoot"] = copy.deepcopy(compareFile)
 compareFile = compareFile+"/HistComp/histcompare_"+playlist[0]
@@ -342,6 +356,14 @@ for name in recoNames:
 	
 with open(compareFile+".json", "w") as outfile:
     json.dump(compareConfig, outfile, indent = 4)
+    
+for name in recoNames:
+	hfile =  TFile.Open(outputRootFiles[name+"_hists"],"update")
+	keys = hfile.GetListOfKeys()
+	unique = histdict["Data"][name+"_only"]
+	for hname in unique:
+		hfile.Delete(hname+";1")
+	hfile.Close()
 
 
 
