@@ -1,9 +1,13 @@
 from ROOT import *
 
 from MnvConverter import convert
-import sys,os
+import sys,os,json
 
-path = os.getenv("TUPLECOMPARISONROOT")
+f = open(sys.argv[1],'r')
+config = json.load(f)
+f.close()
+
+path = config["TupleComparisonRoot"]
 path_bytes = path.encode('ascii')
 
 print (type(path_bytes),type(path))
@@ -30,8 +34,9 @@ gSystem.Load(libpath);
 thf = TCompareHistFiles()
 thf.enableTest( TCompareHistFiles.KS );
 thf.setScalingType(TCompareHistFiles.EqualArea); # need to make this a variable
-name1 = sys.argv[1]
-name2 = sys.argv[2]
+recoNames = config["recoNames"]
+name1 = recoNames[0]
+name2 = recoNames[1]
 print (name1)
 print (name2)
 if not os.path.exists(name1) or not os.path.exists(name2) or os.path.isdir(name1) or os.path.isdir(name2):
