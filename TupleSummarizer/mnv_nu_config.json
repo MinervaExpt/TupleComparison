@@ -9,5 +9,5 @@
                 "CCQENu":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/CCQENu_minervame1N_MC_validation.txt"},
   "dataIn":{"MasterAnaDev":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/MAD_minervame1N_Data_validation.txt",
                   "CCQENu":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/CCQENu_minervame1N_Data_validation.txt"},
-  "cutchoice":["physical","nu"]
+  "cutchoice":["physical","nu","sanity"]
 }

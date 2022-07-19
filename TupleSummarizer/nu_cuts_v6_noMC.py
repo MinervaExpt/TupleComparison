@@ -35,11 +35,10 @@ if len(sys.argv) < 2:
 
 # units are MeV and radians
 cuts = {"physical":"RecoName_E<120000",
-		"antinu":"RecoName_nuHelicity==2",
-		"nu":"RecoName_nuHelicity==1"}   # can implement sets of cuts here
+          "antinu":"RecoName_nuHelicity==2",
+              "nu":"RecoName_nuHelicity==1",
+          "sanity":"abs(RecoName_minos_trk_p)<120000&&muon_minerva_trk_chi2PerDoF>0"}   # can implement sets of cuts here
 #"recoilEnergy":"recoil_energy_nonmuon_nonvtx100mm<500.",
-#"sanity":"abs(CCQENu_minos_trk_p)<120000&&muon_minerva_trk_chi2PerDoF>0",
-#"antinu":"CCQENu_nuHelicity==2",
 #"muonTheta":"muon_theta<0.4",
 #"physical":"CCQENu_E<120000",
 #"highpt":"CCQENu_muon_P*sin(muon_theta)>1000",

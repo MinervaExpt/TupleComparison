@@ -1,13 +1,14 @@
 from ROOT import *
 
-from MnvConverter import convert
+#from MnvConverter import convert
 import sys,os,json
 
 f = open(sys.argv[1],'r')
 config = json.load(f)
 f.close()
 
-path = config["TupleComparisonRoot"]
+#path = config["TupleComparisonRoot"]
+path = os.getenv("TUPLECOMPARISONROOT")
 path_bytes = path.encode('ascii')
 
 print (type(path_bytes),type(path))
@@ -35,8 +36,8 @@ thf = TCompareHistFiles()
 thf.enableTest( TCompareHistFiles.KS );
 thf.setScalingType(TCompareHistFiles.EqualArea); # need to make this a variable
 recoNames = config["recoNames"]
-name1 = recoNames[0]
-name2 = recoNames[1]
+name1 = config[recoNames[0]]
+name2 = config[recoNames[1]]
 print (name1)
 print (name2)
 if not os.path.exists(name1) or not os.path.exists(name2) or os.path.isdir(name1) or os.path.isdir(name2):
@@ -62,4 +63,5 @@ thf.getFile1(newname1);
 thf.getFile2(newname2);
 
 comp_result = thf.compare();
-thf.writeWebPage(sys.argv[3]);
+outputpage = sys.argv[1].replace(".json",".html")
+thf.writeWebPage(outputpage);
