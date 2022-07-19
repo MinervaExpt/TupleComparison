@@ -1,5 +1,14 @@
 {
     "Data": {
+        "CCQENu_no_hist_due_to_truth": [
+            "found_truth",
+            "truth_has_michel_electron",
+            "truth_improved_michel_electron",
+            "truth_has_michel_from_pion_minus_momentum_sz",
+            "truth_has_michel_from_pion_minus_momentum",
+            "truth_has_michel_from_pion_plus_momentum_sz",
+            "truth_has_michel_from_pion_plus_momentum"
+        ],
         "CCQENu_only": [
             "FittedMichel_cluster_energy",
             "FittedMichel_cluster_pos",
@@ -254,6 +263,10 @@
             "recoil_centroid_position_2",
             "visE_clusters_at_end_proton_prong",
             "vtx_blobs_vtx_energy_in_prong"
+        ],
+        "MasterAnaDev_no_hist_due_to_truth": [
+            "found_truth",
+            "truth_improved_michel_electron"
         ],
         "MasterAnaDev_only": [
             "ANN_plane_probs_0",

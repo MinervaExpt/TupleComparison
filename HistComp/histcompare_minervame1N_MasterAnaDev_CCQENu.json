@@ -1,0 +1,9 @@
+{
+    "recoNames": [
+        "MasterAnaDev",
+        "CCQENu"
+    ],
+    "MasterAnaDev": "/home/sean/Minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_minervame1N_MAD_Data_physical_nu.root",
+    "CCQENu": "/home/sean/Minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_minervame1N_CCQENu_Data_physical_nu.root",
+    "TupleComparisonRoot": "/home/sean/Minerva/TupleComparison"
+}
