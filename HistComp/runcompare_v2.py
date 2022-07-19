@@ -3,7 +3,8 @@ from ROOT import *
 from MnvConverter import convert
 import sys,os,json
 
-config = json.load(f := open(sys.argv[1]))
+f = open(sys.argv[1],'r')
+config = json.load(f)
 f.close()
 
 path = config["TupleComparisonRoot"]

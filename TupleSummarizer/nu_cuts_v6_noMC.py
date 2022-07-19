@@ -48,7 +48,8 @@ cuts = {"physical":"RecoName_E<120000",
 #}
 
 # Open and load configuration file
-config = json.load(f := open(sys.argv[1]))
+f = open(sys.argv[1])
+config = json.load(f)
 f.close()
 
 playlist = config["playlist"]
