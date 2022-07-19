@@ -30,7 +30,7 @@ gSystem.Load(libpath);
 #gROOT.LoadMacro(os.path.join(plotutilsdir,"HistComp","libhistcomp.so"));
 thf = TCompareHistFiles()
 thf.enableTest( TCompareHistFiles.KS );
-#thf.setScalingType(TCompareHistFiles.ScalingType.FixedFactor); # need to make this a variable
+thf.setScalingType(TCompareHistFiles.ScalingType.EqualArea); # need to make this a variable
 name1 = sys.argv[1]
 name2 = sys.argv[2]
 print (name1)

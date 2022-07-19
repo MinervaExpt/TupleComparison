@@ -174,6 +174,7 @@ for name in recoNames:
 	ROOT.gROOT.SetBatch(True)  # Supresses the drawing canvas
 	print("    Data histogram filename:", histoutname,"\n")
 	
+	data_or_truth_list = []
 	for i in ntuple.GetListOfBranches():
 		if DEBUG and count[name]["Data"] > 100:
 			break
@@ -190,6 +191,7 @@ for name in recoNames:
 			if DEBUG:
 				print (branch)
 			if data and "truth" in branch:
+				data_or_truth_list.append(branch)
 				continue
 			
 		# if it is a variable, just histogram it.  Ditto if it is huge, then just glom em all together as one.
@@ -212,17 +214,20 @@ for name in recoNames:
 
 				mini = htemp.GetBinLowEdge(1)
 				maxa = htemp.GetBinLowEdge(htemp.GetNbinsX()+1)
+				
+				minimum[branch] = mini
+				maximum[branch] = maxa
+				
 				htemp.Delete()
 
 				text = "%s %g %g %d\n"%(branch,mini,maxa,length)
 				listing.write(text)
 				haslim[branch] = True
-
-			# here if you already had limits set and did not use the root voodoo
-
-			if branch in haslim and branch in minimum:
+			else:
+			
 				mini = minimum[branch]
 				maxa = maximum[branch]
+				#print(branch+" already has limits: ("+str(mini)+","+str(maxa)+")")
 
 			# now make a histogram with the right range
 
@@ -275,14 +280,16 @@ for name in recoNames:
 		        	
 					mini = htemp.GetBinLowEdge(1)
 					maxa = htemp.GetBinLowEdge(htemp.GetNbinsX()+1)
+					
+					minimum[branchname] = mini
+					maximum[branchname] = maxa
+				
 					htemp.Delete()
 		        	
 					text = "%s %g %g %d\n"%(branchname,mini,maxa,length)
 					listing.write(text)
-					haslim[branchname] = True
-		        
-				if branchname in haslim and branchname in minimum:
-					#print ("vector", mini,minimum[branchname])
+					haslim[branchname] = True        
+				else:
 					mini = minimum[branchname]
 					maxa = maximum[branchname]
 		          
@@ -312,31 +319,40 @@ for name in recoNames:
 		ntuple.Write()
 		cutfile.Close()
 	
+	if data:
+		histdict["Data"][name+"_no_hist_due_to_truth"] = data_or_truth_list
+		print(name+" branches satisfying 'if data and "+'"truth"'+" in branch':")
+		for bname in data_or_truth_list:
+			print("   "+bname)
+	
 listing.close()
 
-
+# Creating JSON file containing list of unique and shared histograms
 histdict["Data"]["Shared"] = histdict["Data"][recoNames[0]+"_only"]
 
-for name in recoNames:
+for name in recoNames: # Getting shared list
 	histdict["Data"]["Shared"] = list(set(histdict["Data"]["Shared"])-(set(histdict["Data"]["Shared"])-set(histdict["Data"][name+"_only"])))
 	
-for name in recoNames:
+for name in recoNames: # Getting unique list for each recoName
 	print(name+" total count: "+str(len(histdict["Data"][name+"_only"])))
 	histdict["Data"][name+"_only"] = list(set(histdict["Data"][name+"_only"])-set(histdict["Data"]["Shared"]))
 	print(name+"_only count: "+str(len(histdict["Data"][name+"_only"])))
 print("Shared count: "+str(len(histdict["Data"]["Shared"])))
 
+# Sorting each list alphabetically
 histdict["Data"]["Shared"].sort()
 for name in recoNames:
 	histdict["Data"][name+"_only"].sort()
 
+# Saving to JSON file
 json_object = json.dumps(histdict, sort_keys = True, indent = 4)
 jname = "histograms_"+playlist[0]+".json"
 with open(jname, "w") as outfile:
 	outfile.write(json_object)
 
-###
+########
 
+# Saving JSON file listing output root files
 json_object = json.dumps(outputRootFiles, indent = 4)
 jname = playlist[0]
 for name in recoNames:
@@ -345,8 +361,9 @@ jname = jname + "_outputRootFiles.json"
 with open(jname, "w") as outfile:
 	outfile.write(json_object)
 
-###
+#########
 
+# Saving JSON file listing important paths in HistComp folder
 compareFile = os.path.dirname(os.path.dirname(os.getcwd()))
 compareConfig["TupleComparisonRoot"] = copy.deepcopy(compareFile)
 compareFile = compareFile+"/HistComp/histcompare_"+playlist[0]
@@ -355,14 +372,48 @@ for name in recoNames:
 	
 with open(compareFile+".json", "w") as outfile:
     json.dump(compareConfig, outfile, indent = 4)
-    
+
+##########
+
+# Removing unique histrograms from generated hist root files
+f = open("histograms_"+playlist[0]+".json","r")
+hconfig = json.load(f)
+f.close()
 for name in recoNames:
+
 	hfile =  TFile.Open(outputRootFiles[name+"_hists"],"update")
-	keys = hfile.GetListOfKeys()
-	unique = histdict["Data"][name+"_only"]
-	for hname in unique:
-		hfile.Delete(hname+";1")
+	print("Opening "+outputRootFiles[name+'_hists']+" to remove unique histograms")
+	keylist = hfile.GetListOfKeys()
+	hkeys = {}
+	for i in keylist:
+		hkeys[i.GetName()]=i.GetCycle()
+	for hname in hkeys.keys():
+		if hname in hconfig["Data"][name+"_only"]:
+			if hkeys[hname] == 1: hfile.Delete(hname+";1")
 	hfile.Close()
+	
+	# For some reason I have to close the file and reopen it to
+	# delete the histogram in which cycle = 2
+	hfile =  TFile.Open(outputRootFiles[name+"_hists"],"update")
+	keylist = hfile.GetListOfKeys()
+	hkeys = {}
+	for i in keylist:
+		hkeys[i.GetName()]=i.GetCycle()
+	for hname in hkeys.keys():
+		if hname in hconfig["Data"][name+"_only"]:
+			if hkeys[hname] == 2: hfile.Delete(hname+";2")
+	hfile.Close()
+	
+#energy_from_mc
+#energy_from_mc_fraction
+#energy_from_mc_fraction_of_highest
+#muon_fuzz_energy
+#recoName_r_minos_trk_bdL
+#recoName_r_minos_trk_end_dcosz
+#recoName_r_minos_trk_vtx_dcosz
+#recoName_t_minos_trk_numFSMuons
+#recoName_t_minos_trk_primFSLeptonPDG
+
 
 
 
