@@ -54,7 +54,7 @@ void THistComp1D::DrawRatio()
 
   hratio->GetYaxis()->SetNdivisions(505);
 
-  hratio->GetYaxis()->SetRangeUser(0, 2);
+  hratio->GetYaxis()->SetRangeUser(.75, 1.25);
 }
 
 void THistComp1D::Draw( Option_t * opt )
