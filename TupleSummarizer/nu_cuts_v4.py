@@ -31,7 +31,8 @@ if len(sys.argv) < 2:
 # map of tags for cuts you might wish to apply
 
 # units are MeV and radians
-cuts = {"physical":"CCQENu_E<120000","antinu":"CCQENu_nuHelicity==2"}   # can implement sets of cuts here
+#cuts = {"physical":"CCQENu_E<120000","antinu":"CCQENu_nuHelicity==2","nu":CCQENu_nuHelicity==2"}   # can implement sets of cuts here
+cuts = {"physical":"MasterAnaDev_E<120000","antinu":"MasterAnaDev_nuHelicity==2","nu":"MasterAnaDev_nuHelicity==1"}
 #"recoilEnergy":"recoil_energy_nonmuon_nonvtx100mm<500.",
 #"sanity":"abs(CCQENu_minos_trk_p)<120000&&muon_minerva_trk_chi2PerDoF>0",
 #"antinu":"CCQENu_nuHelicity==2",
@@ -44,13 +45,15 @@ cuts = {"physical":"CCQENu_E<120000","antinu":"CCQENu_nuHelicity==2"}   # can im
 
 # here you choose what cuts you actually wish to apply for this run.
 
-cutchoice = ["physical","antinu"] # can enable sets of cuts here
+#cutchoice = ["physical","antinu"] # can enable sets of cuts here
+cutchoice = ["physical"]
 
 # Open the input file
 
 inputlist = open(sys.argv[1],'r').readlines()
 
-thechain = TChain("CCQENu")  # root -l file.root ; TBrowser b; # would show you this.
+#thechain = TChain("CCQENu")  # root -l file.root ; TBrowser b; # would show you this.
+thechain = TChain("MasterAnaDev")
 for line in inputlist:
   inputfile = line.strip()
   thechain.Add(inputfile)

@@ -1,9 +1,9 @@
 {
+    "MasterAnaDev": "/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_MAD_minervame1N_Data_validation_physical_nu_sanity.root", 
     "recoNames": [
-        "MasterAnaDev",
+        "MasterAnaDev", 
         "CCQENu"
-    ],
-    "MasterAnaDev": "/home/sean/Minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_minervame1N_MAD_Data_physical_nu.root",
-    "CCQENu": "/home/sean/Minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_minervame1N_CCQENu_Data_physical_nu.root",
-    "TupleComparisonRoot": "/home/sean/Minerva/TupleComparison"
+    ], 
+    "TupleComparisonRoot": "/minerva/app/users/gilligan/minerva/TupleComparison", 
+    "CCQENu": "/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_CCQENu_minervame1N_Data_validation_physical_nu_sanity.root"
 }
