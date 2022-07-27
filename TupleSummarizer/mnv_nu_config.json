@@ -1,14 +1,16 @@
 {
-  "playlist":["minervame1N"],
-  "recoNames":["MasterAnaDev","CCQENu"],
-  "absolutePath":true,
-  "keepCuts":false,
-  "doData":true,
-  "doMC":false,
-  "mcIn":{"MasterAnaDev":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/MAD_minervame1N_MC_validation.txt",
-                "CCQENu":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/CCQENu_minervame1N_MC_validation.txt"},
-  "dataIn":{"MasterAnaDev":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/MAD_minervame1N_Data_validation.txt",
-                  "CCQENu":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/CCQENu_minervame1N_Data_validation.txt"},
-  "cutchoice":["physical","nu","sanity"]
+  "playlist":"minervame1N",
+  "reconames":["MasterAnaDev","CCQENu"],
+  "samples":["Data"],
+  "MC":{"MasterAnaDev":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/MAD_minervame1N_MC_validation.txt",
+              "CCQENu":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/CCQENu_minervame1N_MC_validation.txt"},
+  "Data":{"MasterAnaDev":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/MAD_minervame1N_Data_validation.txt",
+                "CCQENu":"/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/playlists/CCQENu_minervame1N_Data_validation.txt"},
+  "cutchoice":["physical","nu","sanity"],
+  "cuts_dictionary":"cuts_dictionary.json",
+  "keepcuts":false,
+  "drop_unique_hists":true,
+  "hasranges":false,
+  "input_rangefile":null
 }
 

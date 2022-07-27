@@ -1,9 +1,0 @@
-{
-    "MasterAnaDev": "/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_MAD_minervame1N_Data_validation_physical_nu_sanity.root", 
-    "recoNames": [
-        "MasterAnaDev", 
-        "CCQENu"
-    ], 
-    "TupleComparisonRoot": "/minerva/app/users/gilligan/minerva/TupleComparison", 
-    "CCQENu": "/minerva/app/users/gilligan/minerva/TupleComparison/TupleSummarizer/minervame1N_MasterAnaDev_CCQENu/hist_CCQENu_minervame1N_Data_validation_physical_nu_sanity.root"
-}

@@ -1,0 +1,14 @@
+{ 
+  "README":"Units are in MeV and radians.",
+  "cuts":{
+           "recoilEnergy":"recoil_energy_nonmuon_nonvtx100mm<500.",
+               "physical":"recoName_E<120000",
+                 "antinu":"recoName_nuHelicity==2",
+                     "nu":"recoName_nuHelicity==1",
+                 "sanity":"abs(recoName_minos_trk_p)<120000&&muon_minerva_trk_chi2PerDoF>0",
+              "muonTheta":"muon_theta<0.4",
+                 "highpt":"recoName_muon_P*sin(muon_theta)>1000",
+               "strangeP":"recoName_muon_E/mc_primFSLepton[3]>2",
+                 "goodmu":"recoName_minos_trk_eqp_qp<0.4"
+         }
+}
