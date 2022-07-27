@@ -171,7 +171,7 @@ for sample in samples:
 		for cut in cutchoice:
 			spaces = ""
 			for i in range(maxcutnamelength - len(cut)): spaces += " "
-			print("         "+cut+spaces+" : ",recoCuts[cut])
+			print("         "+cut+spaces+" : "+recoCuts[cut])
 
 		#thechain = TChain(name)  # root -l file.root ; TBrowser b; # would show you this.
 		thechain = TChain(name)
