@@ -2,9 +2,7 @@ from ROOT import *
 #from MnvConverter import convert
 import sys,os,json
 
-f = open(sys.argv[1],'r')
-config = json.load(f)
-f.close()
+config = json.load(open(sys.argv[1],'r'))
 summary = json.load(open(config["summary"],'r'))
 
 playlist = summary["playlist"]
@@ -13,15 +11,9 @@ samples = summary["samples"]
 histograms = summary["histograms"]
 
 histnames = {}
-histpaths = []
 for hist in histograms:
 	histnames[hist] = os.path.basename(histograms[hist])
-	histpaths.append(os.path.dirname(histograms[hist]))
-if len(set(histpaths)) == 1:
-	histpath = histpaths[0]
-else:
-	print("\nError: Histograms should all be in the same directory. Exiting comparison.\n")
-	sys.exit(1)
+histpath = os.path.dirname(config["summary"])
 
 summary_HistComp = {
                     "cuts":summary["cuts"],
@@ -49,7 +41,7 @@ if compare_reconames and compare_samples:
 	for hist1 in hists:
 		used.append(hist1)
 		for hist2 in list(set(hists)-set(used)):
-			title = playlist+"_"+hist1+"_to_"+hist2
+			title = hist1+"_to_"+hist2
 			summary_HistComp["sets"][title] = [histnames[hist1],histnames[hist2]]
 # Compare sets with different reco names but from the same sample.
 # Will do: Data_CCQENu to Data_MasterAnaDev
@@ -63,7 +55,7 @@ elif compare_reconames:
 		used.append(name1)
 		for name2 in list(set(reconames)-set(used)):
 			for sample in samples:
-				title = playlist+"_"+sample+"_"+name1+"_to_"+name2
+				title = sample+"_"+name1+"_to_"+sample+"_"+name2
 				hist1 = histnames[sample+"_"+name1]
 				hist2 = histnames[sample+"_"+name2]
 				summary_HistComp["sets"][title] = {"hist1":hist1,"hist2":hist2}
@@ -79,7 +71,7 @@ elif compare_samples:
 		used.append(sample1)
 		for sample2 in list(set(samples)-set(used)):
 			for name in reconames:
-				title = playlist+"_"+sample1+"_to_"+sample2+"_"+name
+				title = sample1+"_"+name+"_to_"+sample2+"_"+name
 				hist1 = histnames[sample1+"_"+name]
 				hist2 = histnames[sample2+"_"+name]
 				summary_HistComp["sets"][title] = [hist1,hist2]
@@ -87,19 +79,12 @@ else:
 	print("\nError: No comparison selections made. Exiting comparison.\n")
 	sys.exit(1)
 
-# Create (if necessary) and enter output folder
-output_folder = os.path.basename(os.path.dirname(config["summary"]))
-if not os.path.isdir(output_folder):
-	os.mkdir(output_folder)
-os.chdir(output_folder)
-
 for title in summary_HistComp["sets"]:
 	summary_HistComp["output_htmls"].append(title+".html")
 
 with open("summary_HistComp.json", "w") as outfile:
 	json.dump(summary_HistComp["sets"], outfile, indent = 4)
 
-#path = config["TupleComparisonRoot"]
 path = os.getenv("TUPLECOMPARISONROOT")
 path_bytes = path.encode('ascii')
 
@@ -120,9 +105,9 @@ gSystem.Load(rootsys+"/lib/libGui.so");
 #print (newpath, type(newpath))
 #gROOT.SetMacroPath( newpath)
     
-#libpath = os.path.join(path,"HistComp","libhistcomp.so")
-#print(libpath)
-#gSystem.Load(libpath);
+libpath = os.path.join(path,"HistComp","libhistcomp.so")
+print(libpath)
+gSystem.Load(libpath);
 #gROOT.LoadMacro(libpath);
 #gROOT.LoadMacro(os.path.join(plotutilsdir,"HistComp","libhistcomp.so"));
 

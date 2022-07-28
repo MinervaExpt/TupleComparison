@@ -61,47 +61,42 @@ if hasranges and branch in minimum:
 	ranges = json.load(open(config["rangefile"],"r"))
 		
 # Output range file will be generated regardless of input one or not.
-# Create output file names
+# Create output file names and folder name
 output_folder = playlist
-output_summary_file = "summarized_"+playlist
-output_range_file = "ranges_"+playlist
-output_histdict_file = "histdirectory_"+playlist
-output_HistComp_file = "histcomp_"+playlist
 for sample in samples:
 	output_folder += "_"+sample
-	output_summary_file += "_"+sample
-	output_range_file += "_"+sample
-	output_histdict_file += "_"+sample
-	output_HistComp_file += "_"+sample
 for name in reconames:
 	output_folder += "_"+name
-	output_summary_file += "_"+name
-	output_range_file += "_"+name
-	output_histdict_file += "_"+name
-	output_HistComp_file += "_"+name
-output_summary_file += ".json"
-output_range_file += ".json"
-output_histdict_file += ".json"
-output_HistComp_file += ".json"
+for cut in cutchoice:
+	output_folder += "_"+cut
+output_summary_file = "summary.json"
+output_range_file = "ranges.json"
+output_histdict_file = "histdirectory.json"
+output_HistComp_file = "config_HistComp.json"
+output_playlist_file = "playlistfiles.json"
 
-output_HistComp_path = os.path.dirname(os.getcwd())
-output_HistComp_path += "/HistComp/"+output_HistComp_file
+# Create (if necessary) and enter output folder and create histcomp folder
+output_HistComp_folder = os.path.dirname(os.getcwd())+"/HistComp/"+output_folder
+if not os.path.isdir(output_HistComp_folder):
+	os.mkdir(output_HistComp_folder)
 
-# Create (if necessary) and enter output folder
 if not os.path.isdir(output_folder):
 	os.mkdir(output_folder)
 os.chdir(output_folder)
 
 # Initialize output configuration files, fill where possible
 summary = {
+           "folder_path":os.getcwd(),
            "input_config": sys.argv[1],
            "playlist": playlist,
+           "playlist_files":output_playlist_file,
            "reconames": reconames,
            "samples": samples,
-           "output_range_file":os.getcwd()+"/"+output_range_file,
+           "output_range_file":output_range_file,
            "cuts": {},
-           "histogram_directory": os.getcwd()+"/"+output_histdict_file,
-           "histcomp_config": output_HistComp_path,
+           "histogram_directory":output_histdict_file,
+           "histcomp_folder_path":output_HistComp_folder,
+           "config_HistComp":output_HistComp_file,
            "histograms": {}
           }
 for cut in cutchoice: summary["cuts"][cut] = cuts[cut]
@@ -119,6 +114,7 @@ if data: histdict["ignored"]["truth"] = {}
 
 hist_count = {}
 temp_histdict = {}
+playlist_files = {}
 
 HistComp_config = {
                    "summary": os.getcwd()+"/"+output_summary_file,
@@ -127,14 +123,9 @@ HistComp_config = {
                   }
 
 for sample in samples:
-	for name in reconames:
-		output_root_hist_file = "hist_"+name+"_"+playlist+"_"+sample
-		for cut in cutchoice: output_root_hist_file += "_"+cut
-		output_root_hist_file += ".root"		
-		summary["histograms"][sample+"_"+name] = os.getcwd()+"/"+output_root_hist_file
-		if keepcuts: 
-			output_root_cuts_file = "cuts_"+name+"_"+playlist+"_"+sample+".root"
-			summary["passed_cuts"][sample+"_"+name] = os.getcwd()+"/"+output_root_cuts_file
+	for name in reconames:		
+		summary["histograms"][sample+"_"+name] = "hist_"+name+"_"+sample+".root"
+		if keepcuts: summary["passed_cuts"][sample+"_"+name] = "cuts_"+name+"_"+sample+".root"
 		histdict["ignored"]["not_shared"][sample+"_"+name] = []
 		histdict["ignored"]["sz_branch"][sample+"_"+name] = []
 		histdict["ignored"]["not_TH"][sample+"_"+name] = {}
@@ -142,9 +133,17 @@ for sample in samples:
 		
 		hist_count[sample+"_"+name] = 0
 		temp_histdict[sample+"_"+name] = []
-		
-print("\nSamples are: "+str(samples))
-print("Reco names are: "+str(reconames))
+		playlist_files[sample+"_"+name] = []
+
+samples_list = "["
+names_list = "["
+for sample in samples: samples_list += sample+","
+for name in reconames: names_list += name+","
+samples_list = samples_list[0:-1]+"]"
+names_list = names_list[0:-1]+"]"
+
+print("\nSamples are: "+samples_list)
+print("Reco names are: "+names_list)
 
 for sample in samples:
 	print("\nBegin "+sample+":")
@@ -179,6 +178,7 @@ for sample in samples:
 
 		for line in input_file_list:
 			input_file = line.strip()
+			playlist_files[sample+"_"+name].append(input_file)
 			thechain.Add(input_file)
 
 		if (DEBUG):
@@ -408,13 +408,15 @@ for branch in rangesList:
 	ranges[branch] = [minimum[branch],maximum[branch],length[branch]]
 
 # Saving output JSON files
-with open(output_range_file, "w") as outfile:
+with open(output_range_file,"w") as outfile:
 	json.dump(ranges, outfile, indent = 4)
-with open(output_histdict_file, "w") as outfile:
+with open(output_histdict_file,"w") as outfile:
 	json.dump(histdict, outfile, indent = 4)
-with open(output_HistComp_path,"w") as outfile:
+with open(output_playlist_file,"w") as outfile:
+	json.dump(playlist_files, outfile, indent = 4)
+with open(output_HistComp_folder+"/"+output_HistComp_file,"w") as outfile:
     json.dump(HistComp_config, outfile, indent = 4)
-with open(output_summary_file, "w") as outfile:
+with open(output_summary_file,"w") as outfile:
 	json.dump(summary, outfile, indent = 4)
 
 ##########
@@ -458,13 +460,14 @@ print("Output files:")
 print("   "+os.getcwd()+"/"+output_summary_file)
 for sample in samples:
 	for name in reconames:
-		print("   "+summary["histograms"][sample+"_"+name])
+		print("   "+os.getcwd()+"/"+summary["histograms"][sample+"_"+name])
 if keepcuts:
 	for sample in samples:
 		for name in reconames:
 			print("   "+summary["passed_events"][sample+"_"+name])
+print("   "+os.getcwd()+"/"+output_playlist_file)
 print("   "+os.getcwd()+"/"+output_range_file)
-print("   "+output_HistComp_path+"\n")
+print("   "+output_HistComp_folder+"/"+output_HistComp_file+"\n")
 
 #energy_from_mc
 #energy_from_mc_fraction
