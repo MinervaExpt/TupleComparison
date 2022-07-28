@@ -197,8 +197,10 @@ for sample in samples:
 			print ("      No TChain in "+tuplename)
 			sys.exit(1)
 		if recoCuts != []:
-			print ("\n      Building smaller tuples with cuts")
+			print("\n      Number of entries before cuts: "+str(in_ntuple.GetEntries()))
+			print ("      Building smaller tuples with cuts...")
 			ntuple = in_ntuple.CopyTree(thecut)
+			print("      Number of entries after cuts: "+str(ntuple.GetEntries()))
 		else:
 			ntuple = thecut
 		if keepcuts:
