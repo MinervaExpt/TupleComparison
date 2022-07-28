@@ -1,9 +1,10 @@
 from ROOT import *
-
-from MnvConverter import convert
+#from MnvConverter import convert
 import sys,os,json
 
-config = json.load(open(sys.argv[1],'r'))
+f = open(sys.argv[1],'r')
+config = json.load(f)
+f.close()
 summary = json.load(open(config["summary"],'r'))
 
 playlist = summary["playlist"]
