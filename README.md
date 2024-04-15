@@ -9,6 +9,10 @@ git clone this
 
 run setup.sh  it assumes you've set WHEREIPUTMYCODE to directory where you put this code (for example APP)
 
-then ```python $TUPLECOMPARISONROOT/HistComp.py runcompareMnv.py <root1> <root2> <output.html>```
-  
-  
+Then type 
+
+ cmake HistComp
+ make
+ ln -s libTUPLECOMPARISON.so libTUPLECOMPARISON.dylib
+
+ python runcompare.py <hist1.root> <hist2.root> <output.html>
