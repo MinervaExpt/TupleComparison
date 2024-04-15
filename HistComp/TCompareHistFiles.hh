@@ -80,8 +80,12 @@ public:
   void setScalingType( ScalingType t ) { _scalingType = t; }
   void setRefScaleFactor( Float_t f )  { _scaleFactor = f; } // only used for FixedFactor
   
-  Bool_t compare();
-  Bool_t compare( TDirectory & d1, TDirectory & d2, Int_t outputDirIndex = 0 );
+  Bool_t compare3();
+
+  Bool_t compareNamed(TString n1, TString n2,
+                                         Int_t oDirIndex=0);
+  Bool_t compare(TDirectory& d1, TDirectory& d2, Int_t outputDirIndex = 0);
+
   TFile * getFile( const char* name );
   
   // Output options

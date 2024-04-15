@@ -40,8 +40,8 @@ TCompareHistFiles::TCompareHistFiles(ostream & os)
   _f1( NULL ), _f2( NULL ),
   _scalingType( None ), _scaleFactor( 1 ), 
   _sortTestType( KS ), _sortValue( SORT_BY_PROB ),
-  _sortDir( INCREASING_VALUE ), _sortOpt( SORT_ALL ),
-  _os( os )
+  _sortDir( INCREASING_VALUE ), _sortOpt( SORT_ALL ), _os(std::cout)
+  
 {
   for ( int i = 0 ; i < NTests ; ++i )
   {
@@ -68,7 +68,7 @@ TFile * TCompareHistFiles::getFile( const char * name )
     file = TFile::Open( name );
     if ( !file )
     {
-      _os << "TCompareHistFiles:  could not open file " << name << endl;
+      std::cout << "TCompareHistFiles:  could not open file " << name << endl;
       return NULL;
     }
     else{
@@ -100,13 +100,13 @@ void TCompareHistFiles::enableTest( TestType t )
   }
   else
   {
-    _os << "TCompareHistFiles:  Unknown test type " << t << endl;
+    std::cout << "TCompareHistFiles:  Unknown test type " << t << endl;
   }
 
   return;
 }
 
-Bool_t TCompareHistFiles::compare()
+Bool_t TCompareHistFiles::compare3()
 {
   // Prepare output directories for all tests
   //
@@ -137,151 +137,142 @@ cout << "Creating output directory " << name
   int nfail = 0;
   for ( int i = 0, iend = _histComps[0].size() ; i < iend ; ++i )
   {
+    //std::cout << _histComps[0].size() << std::endl;
     if ( ! _histComps[0][i]->Passed() ) ++nfail;
   }
-  _os << "Summary of run_comparison test:  " << nfail << " of "
-      << _histComps[0].size() << " histograms tested FAILED" << endl;
+  //std::cout << nfail << std::endl;
+  std::cout << "Summary of run_comparison test:  " << nfail << " of "
+    << _histComps[0].size() << " histograms tested FAILED" << endl;
 
   return comp_result;
 }
 
+Bool_t TCompareHistFiles::compareNamed(TString n1, TString n2,
+                                  Int_t oDirIndex){
+                                    TDirectory* f1 = TFile::Open(n1.Data(),"READONLY");
+                                    TDirectory* f2 = TFile::Open(n2.Data(),"READONLY");
 
-Bool_t TCompareHistFiles::compare( TDirectory & d1, TDirectory & d2,
-                                   Int_t oDirIndex )
-{
-  
-  Bool_t status = true;
-  
-  TIter it1( d1.GetListOfKeys() );
-  TKey * k1;
-  TObject * o1, * o2;
-  TH1  * h1, * h2;
-  THistComp * hc;
-  THistComparator::Result result = THistComparator::NOT_TESTED;
-  
-  TDirectory * curOutDirs[NTests];
-  for ( int ic = 0, icend = _tests.size() ; ic < icend ; ++ic )
-  {
-    curOutDirs[ic] = 
-       static_cast<TDirectory*>( _outputDirs[ic]->operator[](oDirIndex) );
-  }
-  
-  // might want to re-fresh all config settings in case buttons
-  // were pushed before objects were defined...?
-  // Maybe make sure that does not happen...?
-  //
-// cout << "Entering loop over input keys" << endl
-//      << "  Dir1 = " << d1.GetName() << endl
-//      << "  Dir2 = " << d2.GetName() << endl;
-  _os << "TCompareHistFiles:  scanning directory " << d1.GetName() << endl;
-  
-  while ( (k1 = static_cast<TKey*>( it1.Next() )) )
-  {
-    o1 = d1.Get( k1->GetName() );
-    o2 = d2.Get( k1->GetName() );
+                                 
+                                    bool status = compare(*f1, *f2, oDirIndex);
+                                    return status;
 
-    // cout<< "Key1 name = " << k1->GetName() << endl;
-    
-    if ( o2 == NULL )
-    {
-      TString type = ( o1->InheritsFrom("TH1") && 
-                       !(o1->InheritsFrom("TH2") || o1->InheritsFrom("TH3")) 
-                       ? "TH1 " 
-		       : ( o1->InheritsFrom("TDirectory") 
-		         ? "TDirectory "
-			 : "TObject " )
-		     );
-      _os << "TCompareHistFiles: " << o1->ClassName() << " " << o1->GetName()
-          << " not found in file 2" << endl;
+                                  };
+
+    Bool_t TCompareHistFiles::compare(TDirectory &d1, TDirectory &d2,
+                                      Int_t oDirIndex) {
+    Bool_t status = true;
+
+    TIter it1(d1.GetListOfKeys());
+    TKey *k1;
+    TObject *o1, *o2;
+    TH1 *h1, *h2;
+    THistComp *hc;
+    THistComparator::Result result = THistComparator::NOT_TESTED;
+
+    TDirectory *curOutDirs[NTests];
+    for (int ic = 0, icend = _tests.size(); ic < icend; ++ic) {
+        curOutDirs[ic] =
+            static_cast<TDirectory *>(_outputDirs[ic]->operator[](oDirIndex));
     }
-    else if ( o1->InheritsFrom("TH1") &&
-              !(o1->InheritsFrom("TH2") || o1->InheritsFrom("TH3")) )
-    {
-      h1 = static_cast<TH1*>( o1 );
-      h2 = static_cast<TH1*>( o2 );
 
-      _os << "TCompareHistFiles:      comparing TH1 " << h1->GetName() << endl;
-      
-      scaleHist2( h1, h2 );
-      
-      for ( int ic = 0, icend = _tests.size() ; ic < icend ; ++ic )
-      {
-        // cout << "Calling compare for " << _tests[ic]->testType() << endl;
-        hc = _tests[ic]->compare( h1, h2, result );
-        // cout << "Done in compare" << endl;
-	
-	if ( result == THistComparator::OK && hc )
-	{
-          // cout << "Comparison OK && THistComp created" << endl
-          //      << "Adding to output dir " << curOutDirs[ic]->GetName() << endl;
-	  curOutDirs[ic]->Add( hc );
-	  _histComps[ic].push_back( hc );
-	 
-	  TString path = curOutDirs[ic]->GetPath();
-	  path.Remove( path.Index(":") );
-	  
-	  hc->SetOrigPath( path );
-	  hc->SetHistory( TString(" " ) );
-          // cout << "THistComp comfigured and stored" << endl;
-	  
-	  // Fail the comparison if the test in the first index
-	  // position fails.
-	  //
-	  if ( ic == 0 )  status &= hc->Passed();
-	}
-	else
-	{ 
-          // cout << "Comparison not OK, or no THistComp created" << endl;
-	  THistComp * thc = (hc == NULL ? new THistComp1D() : hc);
-	  
-	  curOutDirs[ic]->Add( thc );
-	  _histComps[ic].push_back( thc );
-	}
-      }
-    }
-    else if (  (strcmp(o1->ClassName(), "TDirectory") == 0)
-               ||
-	       (strcmp(o1->ClassName(), "TDirectoryFile") == 0) )
-    {
-      TDirectory * dd1 = static_cast<TDirectory*>( o1 );
-      TDirectory * dd2 = static_cast<TDirectory*>( o2 );
-      
-      _os << "TCompareHistFiles:  scanning directory " 
-          << dd1->GetPath() << endl;
-	  
-      Int_t newOutputIndex = _outputDirs[0]->GetEntriesFast();
-      
-      for ( int ic = 0, icend = _tests.size() ; ic < icend ; ++ic )
-      {
-        TDirectory * dnew = new TDirectory();
-	dnew->SetName( dd1->GetName() );
-	dnew->Build();
-	
-	// Need to add the directory to it's parent and
-	// to the local list of directories 
-        curOutDirs[ic]->Add( dnew );
-	_outputDirs[ic]->AddLast( dnew );
-      }
-      status &= compare( *dd1, *dd2, newOutputIndex );
-      _os << "TCompareHistFile:  done with directory " 
-          << dd1->GetName() << ", continuing with "
-	  << d1.GetName() << endl;
-    }
-    else
-    {
-      _os << "TCompareHistFiles:  **** skipping obj of class " 
-          << o1->ClassName() << " with name " << o1->GetName()
-          << endl;
-    }
-    
-  }  // end loop over objects in the input directories
+    // might want to re-fresh all config settings in case buttons
+    // were pushed before objects were defined...?
+    // Maybe make sure that does not happen...?
+    //
+    // cout << "Entering loop over input keys" << endl
+    //      << "  Dir1 = " << d1.GetName() << endl
+    //      << "  Dir2 = " << d2.GetName() << endl;
+    std::cout << "TCompareHistFiles:  scanning directory " << d1.GetName() << endl;
 
-  // cout << "Done with loop over keys" << endl;
-  return status;	
+    while ((k1 = static_cast<TKey *>(it1.Next()))) {
+        o1 = d1.Get(k1->GetName());
+        o2 = d2.Get(k1->GetName());
 
+        // cout<< "Key1 name = " << k1->GetName() << endl;
+
+        if (o2 == NULL) {
+            TString type = (o1->InheritsFrom("TH1") &&
+                                    !(o1->InheritsFrom("TH2") || o1->InheritsFrom("TH3"))
+                                ? "TH1 "
+                                : (o1->InheritsFrom("TDirectory")
+                                       ? "TDirectory "
+                                       : "TObject "));
+            std::cout << "TCompareHistFiles: " << o1->ClassName() << " " << o1->GetName()
+                << " not found in file 2" << endl;
+        } else if (o1->InheritsFrom("TH1") &&
+                   !(o1->InheritsFrom("TH2") || o1->InheritsFrom("TH3"))) {
+            h1 = static_cast<TH1 *>(o1);
+            h2 = static_cast<TH1 *>(o2);
+
+            std::cout << "TCompareHistFiles:      comparing TH1 " << h1->GetName() << endl;
+
+            scaleHist2(h1, h2);
+
+            for (int ic = 0, icend = _tests.size(); ic < icend; ++ic) {
+                // cout << "Calling compare for " << _tests[ic]->testType() << endl;
+                hc = _tests[ic]->compare(h1, h2, result);
+                // cout << "Done in compare" << endl;
+
+                if (result == THistComparator::OK && hc) {
+                    // cout << "Comparison OK && THistComp created" << endl
+                    //      << "Adding to output dir " << curOutDirs[ic]->GetName() << endl;
+                    curOutDirs[ic]->Add(hc);
+                    _histComps[ic].push_back(hc);
+
+                    TString path = curOutDirs[ic]->GetPath();
+                    path.Remove(path.Index(":"));
+
+                    hc->SetOrigPath(path);
+                    hc->SetHistory(TString(" "));
+                    // cout << "THistComp comfigured and stored" << endl;
+
+                    // Fail the comparison if the test in the first index
+                    // position fails.
+                    //
+                    if (ic == 0) status &= hc->Passed();
+                } else {
+                    // cout << "Comparison not OK, or no THistComp created" << endl;
+                    THistComp *thc = (hc == NULL ? new THistComp1D() : hc);
+
+                    curOutDirs[ic]->Add(thc);
+                    _histComps[ic].push_back(thc);
+                }
+            }
+        } else if ((strcmp(o1->ClassName(), "TDirectory") == 0) ||
+                   (strcmp(o1->ClassName(), "TDirectoryFile") == 0)) {
+            TDirectory *dd1 = static_cast<TDirectory *>(o1);
+            TDirectory *dd2 = static_cast<TDirectory *>(o2);
+
+            std::cout << "TCompareHistFiles:  scanning directory "
+                << dd1->GetPath() << endl;
+
+            Int_t newOutputIndex = _outputDirs[0]->GetEntriesFast();
+
+            for (int ic = 0, icend = _tests.size(); ic < icend; ++ic) {
+                TDirectory *dnew = new TDirectory();
+                dnew->SetName(dd1->GetName());
+                dnew->Build();
+
+                // Need to add the directory to it's parent and
+                // to the local list of directories
+                curOutDirs[ic]->Add(dnew);
+                _outputDirs[ic]->AddLast(dnew);
+            }
+            status &= compare(*dd1, *dd2, newOutputIndex);
+            std::cout << "TCompareHistFile:  done with directory "
+                << dd1->GetName() << ", continuing with "
+                << d1.GetName() << endl;
+        } else {
+            std::cout << "TCompareHistFiles:  **** skipping obj of class "
+                << o1->ClassName() << " with name " << o1->GetName()
+                << endl;
+        }
+
+    }  // end loop over objects in the input directories
+
+    // cout << "Done with loop over keys" << endl;
+    return status;
 }
-
-
 
 void TCompareHistFiles::setSortOption( SortOption so, bool val )
 {
@@ -338,14 +329,15 @@ Bool_t TCompareHistFiles::writeWebPage( const TString & filename  )
   }
   if ( !found )
   {
-    _os << "TCompareHistFiles:  selected sorting test not found! "
+    std::cout << "TCompareHistFiles:  selected sorting test not found! "
         << "Using first found" << endl;
   }
   bool sortAll = (_sortOpt == SORT_ALL);
   bool sortPassed = (_sortOpt == SORT_PASSED);
   bool sortFailed = (_sortOpt == SORT_FAILED);
 
-  _os << "Starting results for " << _histComps[0].size() << " hists" << endl;
+
+  std::cout << "Starting results for " << _histComps[0].size() << " hists" << endl;
   // cout << "  Test index = " << testIndx << endl;
   
   for ( int i = 0, iend = _histComps[0].size() ; i < iend ; ++i )
@@ -392,7 +384,7 @@ Bool_t TCompareHistFiles::writeWebPage( const TString & filename  )
   gifDir.Append( "_files/" );
   gSystem->mkdir( gifDir, true );
 
-  _os << "Writing web page " << filename << endl
+  std::cout << "Writing web page " << filename << endl
       << "Figures written to " << gifDir << endl;
       
 // cout << "Filename = " << filename << endl
@@ -409,7 +401,7 @@ Bool_t TCompareHistFiles::writeWebPage( const TString & filename  )
   FILE * file = fopen( filename, "w" );
   if ( !file )
   {
-    _os << "TCompareHistFiles:  could not open web page file " 
+    std::cout << "TCompareHistFiles:  could not open web page file " 
         << filename << endl;
     return false;
   }
